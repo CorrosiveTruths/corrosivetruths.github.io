@@ -1,10 +1,14 @@
 ---
 layout: post
-title:  "S.T.A.L.K.E.R.: Shadow of Chernobyl"
+title:  "S.T.A.L.K.E.R.: Shadow of Chernobyl review"
 date:   2009-08-26 23:02:54 +0000
-categories: article
 author: Peter
 published: true
+categories:
+- article
+tags:
+- stalker
+- shadow of chernobyl
 ---
 ![S.T.A.L.K.E.R.: Shadow of Chernobyl]({{site.url}}/assets/images/stalker_header.jpg)
 
