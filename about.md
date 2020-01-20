@@ -17,5 +17,4 @@ She reviews video games, and likes tea, cats and cute things.
 
 She enjoys reading, writing, drinking tea, and  video games, particularly story driven ones, or horror.
 
-Michaela's website is [StudiousOctopus](https://studiousoctopus.com/)
-
+Michaela's website is [StudiousOctopus](https://studiousoctopus.com/).

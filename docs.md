@@ -3,6 +3,9 @@ layout: page
 title: Docs
 permalink: /docs/
 ---
+* TOC
+{:toc}
+
 # Recording mobile games
 
 For this we use an old Motorola G4 with Lineage OS installed on it. This version of Lineage comes with a recorder. However, it will only record the device's microphone. So we use the phone's recorder to capture the game's video, and us talking. We use obs to record ourselves talking and also the game sound using the line-in port on the PC. This creates a lot of noise, which we remove using the same Noise Suppression (-30db) settings as with the vox.
