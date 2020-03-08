@@ -29,7 +29,7 @@ The purpose of these tests and this document is somewhat to justify my own setti
 
 # Capture
 
-Nine games were chosen for capture that I felt captured a variety of encoding challenges, from slow-paced 30fps games with flat block-colour menus to a 60fps colourful racing game as well as some games I thought would be a challenge for both the encoders and the quality assessment. Games were chosen because they represent things youtube gamers would actually be uploading rather than using open source movies.
+Nine games were chosen for capture that I felt represented a variety of encoding challenges, from slow-paced 30fps games with flat block-colour menus to a 60fps colourful racing game as well as some games I thought would be a challenge for both the encoders and the quality assessment. Games were chosen because they represent things YouTube gamers would actually be uploading rather than using open source movies.
 
 We all love [Big Buck Bunny](https://peach.blender.org/) and his wacky adventures, but it's almost, but not quite, entirely unlike game footage.
 
@@ -45,11 +45,11 @@ We all love [Big Buck Bunny](https://peach.blender.org/) and his wacky adventure
 
 These will be referred to by shorthand names: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue
 
-The games were captured via OBS from a Black Magic Intensity Pro 4k device, all at 60000/1001 fps as that's what the PS4 outputs in and the PC captures were set to match. NVEnc was used in lossless mode, however, the capture was set to limited / movie colour range and used nv12 (yuv420) as the pixel format, so it wasn't true lossless, but matches the capabilities of the final destination of youtube.
+The games were captured via OBS from a Black Magic Intensity Pro 4k device, all at 60000/1001 fps as that's what the PS4 outputs in and the PC captures were set to match. NVEnc was used in lossless mode, however, the capture was set to limited / movie colour range and used nv12 (yuv420) as the pixel format, so it wasn't true lossless, but matches the capabilities of the final destination of YouTube.
 
 # Lossless Versions
 
-After the initial capture, a three minute section that displayed the best cross-section of gameplay was chosen. These sections were stream-copied for a bitrate comparison to the original capture, and then transcoded losslessly to some working files at non-fractional framerates so make sure indexing works right and to not drop any more frames, these were then transcoded again losslessly (x264 veryslow qp 0) into three minute clips.
+After the initial capture, a three minute section that displayed the best cross-section of gameplay was chosen. These sections were stream-copied for a bitrate comparison to the original capture, and then transcoded losslessly to some working files at non-fractional framerates to make sure indexing works right and to not drop any more frames, these were then transcoded again losslessly (x264 veryslow qp 0) into three minute clips.
 
 |Game|Capture rate* (kb/s)|Transcode rate (kb/s)|Final Fps|
 |---|---|---|---|
@@ -90,9 +90,9 @@ Basically, vmaf is a rating for comparing a distorted video to its original and 
 
 # YouTube Transcodes
 
-Youtube transcodes your videos to a lower quality stream-friendly version. It does this to two codecs, h264 & vp9.
+YouTube transcodes your videos to a lower quality stream-friendly version. It does this to two codecs, h264 & vp9.
 
-By uploading our lossless videos to youtube, downloading the transcoded versions and using vmaf to compare the videos, we can get an idea of what sort of quality we can get out of youtube and put a number to it.
+By uploading our lossless videos to YouTube, downloading the transcoded versions and using vmaf to compare the videos, we can get an idea of what sort of quality we can get out of YouTube and put a number to it.
 
 Name|YT.264 VMAF|YT.264 Rate (kb/s)|YT.vp9 VMAF|YT.vp9 Rate (kb/s)
 ---|---|---|---|---
@@ -106,16 +106,16 @@ Goose_ll|76.11744|2625|85.667461|1325
 Persona_ll|85.245592|2607|89.414688|1473
 Rogue_ll|96.449077|3751|93.799547|2202
 
-![Lossless uploaded to youtube]({{site.url}}/assets/images/Lossless_uploads_to_youtube.svg "Lossless uploaded to youtube")  
-*Lossless uploaded to youtube*
+![Lossless uploaded to YouTube]({{site.url}}/assets/images/Lossless_uploads_to_youtube.svg "Lossless uploaded to YouTube")  
+*Lossless uploaded to YouTube*
 
 vp9 gives better results than h264 *despite* the bitrate being lower.
 
-The bitrate is not *consistent*. An assumption might be that youtube has a certain bitrate limit and that, should you feed it lossless content, it will use say, up to 5mb/s, but that's not the case, youtube like most modern encoders will encode targeting a quality - otherwise the bitrates would be flat.
+The bitrate is not *consistent*. An assumption might be that YouTube has a certain bitrate limit and that, should you feed it lossless content, it will use say, up to 5mb/s, but that's not the case, YouTube like most modern encoders will encode targeting a quality - otherwise the bitrates would be flat.
 
-You can see how youtube will reflect hard-to-encode things and easy-to-encode things in much the same way as lossless. Coincidentally, difficult to encode things appear on the left, whereas the right-side games are easier to encode, requiring fewer bits for better quality. After a certain point, the video's quality really starts dropping, so it isn't a strict quality it targets, likely some form of bitrate constrained crf (constant rate factor, default quality targeting in most software encoders) is happening. It is also the case that youtube segments its videos and encodes each segment separately these are the parts you need to download and assemble to create the finished youtube video.
+You can see how YouTube will reflect hard-to-encode things and easy-to-encode things in much the same way as lossless. Coincidentally, difficult to encode things appear on the left, whereas the right-side games are easier to encode, requiring fewer bits for better quality. After a certain point, the video's quality really starts dropping, so it isn't a strict quality it targets, likely some form of bitrate constrained crf (constant rate factor, default quality targeting in most software encoders) is happening. It is also the case that YouTube segments its videos and encodes each segment separately these are the parts you need to download and assemble to create the finished YouTube video.
 
-You may expect that lossless to youtube would get you the best possible results from youtube in terms of quality. In actuality, we can (and do) get higher vmaf ratings from lossy transcodes, but usually not by much and you can see a definite, but weak correlation between the vmaf rating of the Transcode and the vmaf rating of the youtube version. A stronger correlation would likely be shown with lower quality trancodes. Local transcodes produce more predictable results.
+You may expect that lossless to YouTube would get you the best possible results from YouTube in terms of quality. In actuality, we can (and do) get higher vmaf ratings from lossy transcodes, but usually not by much and you can see a definite, but weak correlation between the vmaf rating of the Transcode and the vmaf rating of the YouTube version. A stronger correlation would likely be shown with lower quality trancodes. Local transcodes produce more predictable results.
 
 # Producing the Videos
 
@@ -156,7 +156,7 @@ Finally since part of what I want to be able to do is make a mistake and then re
 
 # Comparing quality targets versus bitrate targets
 
-Turns out that YouTube's encoding process takes away so much quality that only the crf 28 encodes caused a particularly sharp decline in the final vmaf of the youtube encodes, even double cbr, whilst consistently worse than crf, was using fairly high bitrates that mostly survived the process. So it seems at least like you can't go too wrong at least.
+Turns out that YouTube's encoding process takes away so much quality that only the crf 28 encodes caused a particularly sharp decline in the final vmaf of the YouTube encodes, even double cbr, whilst consistently worse than crf, was using fairly high bitrates that mostly survived the process. So it seems like you can't go _too_ wrong at least.
 
 A good demonstration of the difference between picking a quality setting and picking a bitrate can be shown by taking the same codec and using both modes and showing the vmaf versus the bitrate. So let's take x264, use the same speed preset of veryslow and encode crf 18 versus YouTube strict using 8 or 12Mbps. That gets us this.
 
@@ -223,20 +223,22 @@ My process has been to use crf 15 for 60fps and crf 18 for 30fps. Turns out, tha
 ![Double-baking crf 18]({{site.url}}/assets/images/Double-baked_18_2.svg "Double-baking crf 18")  
 *Double-baking crf 18*
 
-I'm also quite happy that crf 18 can survive a further transcode of itself with an expected generational loss, but at least the bitrate also goes down. There's barely any effect on the youtube encodes, here we're showing the better vp9 codec.
+I'm also quite happy that crf 18 can survive a further transcode of itself with an expected generational loss, but at least the bitrate also goes down. There's barely any effect on the YouTube encodes, here we're showing the better vp9 codec.
 
 # What about 4k?
 
-Next article, how 4k affects youtube encoding.
+Next article, how 4k affects YouTube encoding.
 
 ![Uploading 2160p]({{site.url}}/assets/images/4k_preview.svg "Uploading 2160p")  
 *Uploading 2160p*
 
-Turns out the encoding done by youtube when you upload 4k is so much better that even uploading upscaled 1080p content will result in significantly better youtube vmaf scores for the same resolution. Here we show the realistic scenario. h264 version of the youtube video shown by default for me versus the 2160p vp9 versions which are the default when uploading the upscaled to 2160p video and viewing in various resolution settings. Not shown, but comparing 1080 vp9 to 1080 vp9 versions on YouTube still shows a significant quality increase and 2160p viewed in its native resolution gives comparable results to 2160p viewed as 1080p.
+Turns out the encoding done by YouTube when you upload 4k is so much better that even uploading upscaled 1080p content will result in significantly better YouTube vmaf scores for the same resolution. Here we show the realistic scenario. h264 version of the YouTube video shown by default for me versus the 2160p vp9 versions which are the default when uploading the upscaled to 2160p video and viewing in various resolution settings. Not shown, but comparing 1080 vp9 to 1080 vp9 versions on YouTube still shows a significant quality increase and 2160p viewed in its native resolution gives comparable results to 2160p viewed as 1080p.
 
 So in actually, all future videos will be quick rendered in 2160p with a lanzos upscale and then in 1080p crf 18 slow for archival. Because YouTube's encoder is better when handling 2160p content.
 
-# Appendix A FFMPEG version
+# Appendix A Tools
+
+ffmpeg-4.1.3 for transcoding.
 
 ffmpeg version 4.1.3 Copyright (c) 2000-2019 the FFmpeg developers
 built with gcc 9.2.0 (Gentoo 9.2.0-r2 p3)
@@ -251,7 +253,61 @@ libswscale      5.  3.100 /  5.  3.100
 libswresample   3.  3.100 /  3.  3.100
 libpostproc    55.  3.100 / 55.  3.100
 
-# Appendix B Results Tables
+vmaf-1.3.15 for the vmaf library.
+
+gnu parallel-20191022 for pushing jobs around the network.
+
+obs-24.0.3
+
+# Appendix B Creating Transcodes
+
+All capturing was done via hmdi into a Black Magic Intensity Pro 4k in 4k full rgb @60000/1001. OBS was used to record the stream in yuv420p limited colour.
+
+Transcode to lossless just to smooth out any possible issues with indexing or the like and to strip the audio.
+
+parallel --nice 20 --eta -S Soma,Stardew,Portal -j1 ffmpeg -i {} -qp 0 -an {.}_ll_medium.mkv ::: /mnt/LPWorking/vmaf/ORIG/*.mkv
+
+Framecopy out the 'br' versions, which are specifically to get an idea of the bitrate of the original captures for the same three minutes. These will be slightly longer than 180 seconds, but when we work out the bitrate, we take these extra seconds into consideration. This is why it's not 100% accurate.
+
+parallel --eta -j1 ffmpeg -ss {1} -nostdin -i {2}.mkv -c copy -an -t 180 -y {2}_br.mkv ::: 237 141 90 16 5 7 210 7 14 :::+ Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue
+
+Get three minute clips from the transcodes of the original captures - also set the framerate to what the content should be in, rather than the obs one. Non-fractional framerates for simplicity's sake. These were used as reference videos for vmaf.
+
+parallel --eta -S Soma,Stardew,Portal -j1 ffmpeg -ss {1} -nostdin -i /mnt/LPWorking/vmaf/ORIG/{2}_ll_medium.mkv -qp 0 -preset veryslow -r {3} -t 180 -y /mnt/LPWorking/vmaf/{2}_ll.mkv ::: 237 141 90 16 5 7 210 7 14 :::+ Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue :::+ 30 30 60 60 60 60 30 60 60
+
+CRF versions were made like this.
+
+parallel --eta -j1 -S soma,stardew,portal ffmpeg -i /mnt/LPWorking/vmaf/{1}_ll.mkv -preset veryslow -crf {2} /mnt/LPWorking/vmaf/{1}_264_vs_{2}.mkv ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue ::: 15 18 23 28
+parallel --eta -j1 -S soma,stardew,portal ffmpeg -i /mnt/LPWorking/vmaf/{1}_ll.mkv -preset slow -c libx265 -crf {2} /mnt/LPWorking/vmaf/{1}_265_s_{2}.mkv ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue ::: 15 18 23 28
+
+Strict YouTube versions.
+
+parallel -j1 --eta -S soma,portal ffmpeg -i /mnt/LPWorking/vmaf/{1}_ll.mkv -g {3} -bf 2 -profile:v high -movflags faststart -coder 1 -preset veryslow -b:v {2}M -y /mnt/LPWorking/vmaf/{1}_264_vs_ytrec.mp4 ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue :::+ 8 8 12 12 12 12 8 12 12 :::+ 15 15 30 30 30 30 15 30 30
+parallel -j1 --eta -S soma,portal ffmpeg -i /mnt/LPWorking/vmaf/{1}_ll.mkv -g {3} -bf 2 -profile:v high -movflags faststart -coder 1 -preset ultrafast -b:v {2}M -y /mnt/LPWorking/vmaf/{1}_264_uf_ytrec.mp4 ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue :::+ 8 8 12 12 12 12 8 12 12 :::+ 15 15 30 30 30 30 15 30 30
+
+CBR versions.
+
+parallel -j1 --eta -S soma,portal --nice 20 ffmpeg -i /mnt/LPWorking/vmaf/{1}_ll.mkv -g {3} -bf 2 -profile:v high -movflags faststart -coder 1 -preset ultrafast -x264-params "nal-hrd=cbr" -b:v {2}M -minrate {2}M -maxrate {2}M -bufsize 2M  -y /mnt/LPWorking/vmaf/{1}_264_uf_cbr.mp4 ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue :::+ 8 8 12 12 12 12 8 12 12 :::+ 15 15 30 30 30 30 15 30 30
+parallel -j1 --eta -S soma,portal --nice 20 ffmpeg -i /mnt/LPWorking/vmaf/{1}_ll.mkv -g {3} -bf 2 -profile:v high -movflags faststart -coder 1 -preset veryslow -x264-params "nal-hrd=cbr" -b:v {2}M -minrate {2}M -maxrate {2}M -bufsize 2M  -y /mnt/LPWorking/vmaf/{1}_264_vs_cbr.mp4 ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue :::+ 8 8 12 12 12 12 8 12 12 :::+ 15 15 30 30 30 30 15 30 30
+
+CBR to CBR versions.
+
+parallel -j1 --eta -S soma,portal --nice 20 ffmpeg -i /mnt/LPWorking/vmaf/{1}_264_vs_cbr.mp4 -g {3} -bf 2 -profile:v high -movflags faststart -coder 1 -preset veryslow -x264-params "nal-hrd=cbr" -b:v {2}M -minrate {2}M -maxrate {2}M -bufsize 2M -y /mnt/LPWorking/vmaf/{1}_264_vs_cbrcbr.mp4 ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue :::+ 8 8 12 12 12 12 8 12 12 :::+ 15 15 30 30 30 30 15 30 30
+parallel -j1 --eta -S soma,portal --nice 20 ffmpeg -i /mnt/LPWorking/vmaf/{1}_264_uf_cbr.mp4 -g {3} -bf 2 -profile:v high -movflags faststart -coder 1 -preset ultrafast -x264-params "nal-hrd=cbr" -b:v {2}M -minrate {2}M -maxrate {2}M -bufsize 2M -y /mnt/LPWorking/vmaf/{1}_264_uf_cbrcbr.mp4 ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue :::+ 8 8 12 12 12 12 8 12 12 :::+ 15 15 30 30 30 30 15 30 30
+
+... and finally, Double-baked CRF.
+
+parallel --eta -j1 --nice 20 -S soma,stardew,portal ffmpeg -i /mnt/LPWorking/vmaf/{}_265_s_18.mkv -preset slow -crf 18 /mnt/LPWorking/vmaf/{}_265_s_1818.mkv ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue
+
+# Appendix C VMAF comparisons
+
+Self comparison for lossless
+
+parallel --nice 20 --eta -j1 -S soma,stardew,portal ffmpeg -i /mnt/LPWorking/vmaf/{1}_ll.mkv -i /mnt/LPWorking/vmaf/{1}_ll.mkv -lavfi libvmaf="model_path=/usr/share/model/vmaf_v0.6.1.pkl" -f null /dev/null ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue &> /mnt/LPWorking/vmaf/vmafscores_self.txt
+
+Add rest here.
+
+# Appendix X Results Tables
 
 Here are the tables of data for completeness.
 
@@ -416,6 +472,8 @@ Rogue_265_s_1818|97.155745|2910|95.185235|3670|92.564231|2160|65471586|82578171|
 Rogue_265_s_23|96.665464|1851|77.045894|4903|79.874038|2612|41654962|110318033|58771227
 Rogue_265_s_28|94.167452|1127|92.415327|3659|90.186826|2134|25364215|82326855|48019095
 Rogue_ll|98.665875|33123|96.449077|3751|93.799547|2202|745274044|84406256|49539400
+
+# Appendix Z Notes
 
 How everything was done.
 
