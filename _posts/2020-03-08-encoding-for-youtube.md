@@ -257,7 +257,9 @@ vmaf-1.3.15 for the vmaf library.
 
 gnu parallel-20191022 for pushing jobs around the network.
 
-obs-24.0.3
+obs-24.0.3 for capturing the video from the Black Magic card.
+
+youtube-dl-2020.01.24 for downloading the videos from YouTube for comparison.
 
 # Appendix B Creating Transcodes
 
@@ -265,7 +267,7 @@ All capturing was done via hmdi into a Black Magic Intensity Pro 4k in 4k full r
 
 Transcode to lossless just to smooth out any possible issues with indexing or the like and to strip the audio.
 
-parallel --nice 20 --eta -S Soma,Stardew,Portal -j1 ffmpeg -i {} -qp 0 -an {.}_ll_medium.mkv ::: /mnt/LPWorking/vmaf/ORIG/*.mkv
+parallel --nice 20 --eta -S node1,node2,node3 -j1 ffmpeg -i {} -qp 0 -an {.}_ll_medium.mkv ::: /mnt/LPWorking/vmaf/ORIG/*.mkv
 
 Framecopy out the 'br' versions, which are specifically to get an idea of the bitrate of the original captures for the same three minutes. These will be slightly longer than 180 seconds, but when we work out the bitrate, we take these extra seconds into consideration. This is why it's not 100% accurate.
 
@@ -273,39 +275,71 @@ parallel --eta -j1 ffmpeg -ss {1} -nostdin -i {2}.mkv -c copy -an -t 180 -y {2}_
 
 Get three minute clips from the transcodes of the original captures - also set the framerate to what the content should be in, rather than the obs one. Non-fractional framerates for simplicity's sake. These were used as reference videos for vmaf.
 
-parallel --eta -S Soma,Stardew,Portal -j1 ffmpeg -ss {1} -nostdin -i /mnt/LPWorking/vmaf/ORIG/{2}_ll_medium.mkv -qp 0 -preset veryslow -r {3} -t 180 -y /mnt/LPWorking/vmaf/{2}_ll.mkv ::: 237 141 90 16 5 7 210 7 14 :::+ Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue :::+ 30 30 60 60 60 60 30 60 60
+parallel --eta -S node1,node2,node3 -j1 ffmpeg -ss {1} -nostdin -i /mnt/LPWorking/vmaf/ORIG/{2}_ll_medium.mkv -qp 0 -preset veryslow -r {3} -t 180 -y /mnt/LPWorking/vmaf/{2}_ll.mkv ::: 237 141 90 16 5 7 210 7 14 :::+ Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue :::+ 30 30 60 60 60 60 30 60 60
 
 CRF versions were made like this.
 
-parallel --eta -j1 -S soma,stardew,portal ffmpeg -i /mnt/LPWorking/vmaf/{1}_ll.mkv -preset veryslow -crf {2} /mnt/LPWorking/vmaf/{1}_264_vs_{2}.mkv ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue ::: 15 18 23 28
-parallel --eta -j1 -S soma,stardew,portal ffmpeg -i /mnt/LPWorking/vmaf/{1}_ll.mkv -preset slow -c libx265 -crf {2} /mnt/LPWorking/vmaf/{1}_265_s_{2}.mkv ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue ::: 15 18 23 28
+parallel --eta -j1 -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/{1}_ll.mkv -preset veryslow -crf {2} /mnt/LPWorking/vmaf/{1}_264_vs_{2}.mkv ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue ::: 15 18 23 28
+parallel --eta -j1 -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/{1}_ll.mkv -preset slow -c libx265 -crf {2} /mnt/LPWorking/vmaf/{1}_265_s_{2}.mkv ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue ::: 15 18 23 28
 
 Strict YouTube versions.
 
-parallel -j1 --eta -S soma,portal ffmpeg -i /mnt/LPWorking/vmaf/{1}_ll.mkv -g {3} -bf 2 -profile:v high -movflags faststart -coder 1 -preset veryslow -b:v {2}M -y /mnt/LPWorking/vmaf/{1}_264_vs_ytrec.mp4 ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue :::+ 8 8 12 12 12 12 8 12 12 :::+ 15 15 30 30 30 30 15 30 30
-parallel -j1 --eta -S soma,portal ffmpeg -i /mnt/LPWorking/vmaf/{1}_ll.mkv -g {3} -bf 2 -profile:v high -movflags faststart -coder 1 -preset ultrafast -b:v {2}M -y /mnt/LPWorking/vmaf/{1}_264_uf_ytrec.mp4 ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue :::+ 8 8 12 12 12 12 8 12 12 :::+ 15 15 30 30 30 30 15 30 30
+parallel -j1 --eta -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/{1}_ll.mkv -g {3} -bf 2 -profile:v high -movflags faststart -coder 1 -preset veryslow -b:v {2}M -y /mnt/LPWorking/vmaf/{1}_264_vs_ytrec.mp4 ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue :::+ 8 8 12 12 12 12 8 12 12 :::+ 15 15 30 30 30 30 15 30 30
+parallel -j1 --eta -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/{1}_ll.mkv -g {3} -bf 2 -profile:v high -movflags faststart -coder 1 -preset ultrafast -b:v {2}M -y /mnt/LPWorking/vmaf/{1}_264_uf_ytrec.mp4 ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue :::+ 8 8 12 12 12 12 8 12 12 :::+ 15 15 30 30 30 30 15 30 30
 
 CBR versions.
 
-parallel -j1 --eta -S soma,portal --nice 20 ffmpeg -i /mnt/LPWorking/vmaf/{1}_ll.mkv -g {3} -bf 2 -profile:v high -movflags faststart -coder 1 -preset ultrafast -x264-params "nal-hrd=cbr" -b:v {2}M -minrate {2}M -maxrate {2}M -bufsize 2M  -y /mnt/LPWorking/vmaf/{1}_264_uf_cbr.mp4 ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue :::+ 8 8 12 12 12 12 8 12 12 :::+ 15 15 30 30 30 30 15 30 30
-parallel -j1 --eta -S soma,portal --nice 20 ffmpeg -i /mnt/LPWorking/vmaf/{1}_ll.mkv -g {3} -bf 2 -profile:v high -movflags faststart -coder 1 -preset veryslow -x264-params "nal-hrd=cbr" -b:v {2}M -minrate {2}M -maxrate {2}M -bufsize 2M  -y /mnt/LPWorking/vmaf/{1}_264_vs_cbr.mp4 ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue :::+ 8 8 12 12 12 12 8 12 12 :::+ 15 15 30 30 30 30 15 30 30
+parallel -j1 --eta -S node1,node2,node3 --nice 20 ffmpeg -i /mnt/LPWorking/vmaf/{1}_ll.mkv -g {3} -bf 2 -profile:v high -movflags faststart -coder 1 -preset ultrafast -x264-params "nal-hrd=cbr" -b:v {2}M -minrate {2}M -maxrate {2}M -bufsize 2M  -y /mnt/LPWorking/vmaf/{1}_264_uf_cbr.mp4 ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue :::+ 8 8 12 12 12 12 8 12 12 :::+ 15 15 30 30 30 30 15 30 30
+parallel -j1 --eta -S node1,node2,node3 --nice 20 ffmpeg -i /mnt/LPWorking/vmaf/{1}_ll.mkv -g {3} -bf 2 -profile:v high -movflags faststart -coder 1 -preset veryslow -x264-params "nal-hrd=cbr" -b:v {2}M -minrate {2}M -maxrate {2}M -bufsize 2M  -y /mnt/LPWorking/vmaf/{1}_264_vs_cbr.mp4 ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue :::+ 8 8 12 12 12 12 8 12 12 :::+ 15 15 30 30 30 30 15 30 30
 
 CBR to CBR versions.
 
-parallel -j1 --eta -S soma,portal --nice 20 ffmpeg -i /mnt/LPWorking/vmaf/{1}_264_vs_cbr.mp4 -g {3} -bf 2 -profile:v high -movflags faststart -coder 1 -preset veryslow -x264-params "nal-hrd=cbr" -b:v {2}M -minrate {2}M -maxrate {2}M -bufsize 2M -y /mnt/LPWorking/vmaf/{1}_264_vs_cbrcbr.mp4 ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue :::+ 8 8 12 12 12 12 8 12 12 :::+ 15 15 30 30 30 30 15 30 30
-parallel -j1 --eta -S soma,portal --nice 20 ffmpeg -i /mnt/LPWorking/vmaf/{1}_264_uf_cbr.mp4 -g {3} -bf 2 -profile:v high -movflags faststart -coder 1 -preset ultrafast -x264-params "nal-hrd=cbr" -b:v {2}M -minrate {2}M -maxrate {2}M -bufsize 2M -y /mnt/LPWorking/vmaf/{1}_264_uf_cbrcbr.mp4 ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue :::+ 8 8 12 12 12 12 8 12 12 :::+ 15 15 30 30 30 30 15 30 30
+parallel -j1 --eta -S node1,node2,node3 --nice 20 ffmpeg -i /mnt/LPWorking/vmaf/{1}_264_vs_cbr.mp4 -g {3} -bf 2 -profile:v high -movflags faststart -coder 1 -preset veryslow -x264-params "nal-hrd=cbr" -b:v {2}M -minrate {2}M -maxrate {2}M -bufsize 2M -y /mnt/LPWorking/vmaf/{1}_264_vs_cbrcbr.mp4 ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue :::+ 8 8 12 12 12 12 8 12 12 :::+ 15 15 30 30 30 30 15 30 30
+parallel -j1 --eta -S node1,node2,node3 --nice 20 ffmpeg -i /mnt/LPWorking/vmaf/{1}_264_uf_cbr.mp4 -g {3} -bf 2 -profile:v high -movflags faststart -coder 1 -preset ultrafast -x264-params "nal-hrd=cbr" -b:v {2}M -minrate {2}M -maxrate {2}M -bufsize 2M -y /mnt/LPWorking/vmaf/{1}_264_uf_cbrcbr.mp4 ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue :::+ 8 8 12 12 12 12 8 12 12 :::+ 15 15 30 30 30 30 15 30 30
 
 ... and finally, Double-baked CRF.
 
-parallel --eta -j1 --nice 20 -S soma,stardew,portal ffmpeg -i /mnt/LPWorking/vmaf/{}_265_s_18.mkv -preset slow -crf 18 /mnt/LPWorking/vmaf/{}_265_s_1818.mkv ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue
+parallel --eta -j1 --nice 20 -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/{}_265_s_18.mkv -preset slow -crf 18 /mnt/LPWorking/vmaf/{}_265_s_1818.mkv ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue
 
-# Appendix C VMAF comparisons
+# Appendix C Transcoded VMAF comparisons
 
 Self comparison for lossless
 
-parallel --nice 20 --eta -j1 -S soma,stardew,portal ffmpeg -i /mnt/LPWorking/vmaf/{1}_ll.mkv -i /mnt/LPWorking/vmaf/{1}_ll.mkv -lavfi libvmaf="model_path=/usr/share/model/vmaf_v0.6.1.pkl" -f null /dev/null ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue &> /mnt/LPWorking/vmaf/vmafscores_self.txt
+parallel --nice 20 --eta -j1 -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/{1}_ll.mkv -i /mnt/LPWorking/vmaf/{1}_ll.mkv -lavfi libvmaf="model_path=/usr/share/model/vmaf_v0.6.1.pkl" -f null /dev/null ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue &> /mnt/LPWorking/vmaf/vmafscores_self.txt
 
-Add rest here.
+Comparisons for all the CRF files.
+
+parallel --nice 20 --eta -j1 -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/{1}_{3}_{4}_{2}.mkv -i /mnt/LPWorking/vmaf/{1}_ll.mkv -lavfi libvmaf="model_path=/usr/share/model/vmaf_v0.6.1.pkl" -f null /dev/null ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue ::: 15 18 23 28 ::: 264 265 :::+ vs s &> /mnt/LPWorking/vmaf/vmafscores_crf.txt
+
+Comparisons for all the bitrate targetted files.
+
+parallel --nice 20 --eta -j1 -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/{1}_264_{2}_{3}.mp4 -i /mnt/LPWorking/vmaf/{1}_ll.mkv -lavfi libvmaf="model_path=/usr/share/model/vmaf_v0.6.1.pkl" -f null -t 180 /dev/null ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue ::: uf vs ::: ytrec cbr cbrcbr &> /mnt/LPWorking/vmaf/vmafscores_mp4.txt
+
+Comparisons for Twice-baked CRF.
+
+parallel --eta -j1 -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/{1}_265_s_1818.mkv -i /mnt/LPWorking/vmaf/{1}_ll.mkv -lavfi libvmaf="model_path=/usr/share/model/vmaf_v0.6.1.pkl" -f null -t 180 /dev/null ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue &> /mnt/LPWorking/vmaf/vmafscores_1818.txt
+
+# Appendix D VMAF Comparisons from YouTube
+
+Lossless upload.
+
+parallel -j1 --eta -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/yt/{}_ll.mp4 -i /mnt/LPWorking/vmaf/{}_ll.mkv -lavfi libvmaf="model_path=/usr/share/model/vmaf_v0.6.1.pkl" -f null -t 180 /dev/null ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue &> vmafscores_ll_264.txt
+parallel -j1 --eta -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/yt/{}_ll.webm -i /mnt/LPWorking/vmaf/{}_ll.mkv -lavfi libvmaf="model_path=/usr/share/model/vmaf_v0.6.1.pkl" -f null -t 180 /dev/null ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue &> vmafscores_ll_vp9.txt
+
+CRF comparisons.
+
+parallel --eta -j1 -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/yt/{1}_{3}_{4}_{2}.mp4 -i /mnt/LPWorking/vmaf/{1}_ll.mkv -lavfi libvmaf="model_path=/usr/share/model/vmaf_v0.6.1.pkl" -f null -t 180 /dev/null ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue ::: 15 18 23 28 ::: 264 265 :::+ vs s &> vmafscores_264.txt
+parallel --eta -j1 -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/yt/{1}_{3}_{4}_{2}.webm -i /mnt/LPWorking/vmaf/{1}_ll.mkv -lavfi libvmaf="model_path=/usr/share/model/vmaf_v0.6.1.pkl" -f null -t 180 /dev/null ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue ::: 15 18 23 28 ::: 264 265 :::+ vs s &> vmafscores_vp9.txt
+
+Comparisons for all the bitrate targetted files.
+
+parallel --nice 20 --eta -j1 -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/yt/{1}_264_{2}_{3}.mp4 -i /mnt/LPWorking/vmaf/{1}_ll.mkv -lavfi libvmaf="model_path=/usr/share/model/vmaf_v0.6.1.pkl" -f null -t 180 /dev/null ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue ::: uf vs ::: ytrec cbr cbrcbr &> /mnt/LPWorking/vmaf/yt/vmafscores_rec_264.txt
+parallel --nice 20 --eta -j1 -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/yt/{1}_264_{2}_{3}.webm -i /mnt/LPWorking/vmaf/{1}_ll.mkv -lavfi libvmaf="model_path=/usr/share/model/vmaf_v0.6.1.pkl" -f null -t 180 /dev/null ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue ::: uf vs ::: ytrec cbr cbrcbr &> /mnt/LPWorking/vmaf/yt/vmafscores_rec_vp9.txt
+
+Comparisons for Twice-baked CRF.
+
+parallel --nice 20 --eta -j1 -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/yt/{1}_265_s_1818.mp4 -i /mnt/LPWorking/vmaf/{1}_ll.mkv -lavfi libvmaf="model_path=/usr/share/model/vmaf_v0.6.1.pkl" -f null -t 180 /dev/null ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue &> /mnt/LPWorking/vmaf/yt/vmafscores_1818_264.txt
+parallel --nice 20 --eta -j1 -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/yt/{1}_265_s_1818.webm -i /mnt/LPWorking/vmaf/{1}_ll.mkv -lavfi libvmaf="model_path=/usr/share/model/vmaf_v0.6.1.pkl" -f null -t 180 /dev/null ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue &> /mnt/LPWorking/vmaf/yt/vmafscores_1818_vp9.txt
 
 # Appendix X Results Tables
 
