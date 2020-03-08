@@ -240,6 +240,7 @@ So in actually, all future videos will be quick rendered in 2160p with a lanzos 
 
 ffmpeg-4.1.3 for transcoding.
 
+```
 ffmpeg version 4.1.3 Copyright (c) 2000-2019 the FFmpeg developers
 built with gcc 9.2.0 (Gentoo 9.2.0-r2 p3)
 configuration: --prefix=/usr --libdir=/usr/lib64 --shlibdir=/usr/lib64 --docdir=/usr/share/doc/ffmpeg-4.1.3/html --mandir=/usr/share/man --enable-shared --cc=x86_64-pc-linux-gnu-gcc --cxx=x86_64-pc-linux-gnu-g++ --ar=x86_64-pc-linux-gnu-ar --optflags='-march=native -O2 -pipe' --disable-static --enable-avfilter --enable-avresample --enable-libvmaf --enable-version3 --disable-stripping --disable-optimizations --disable-libcelt --disable-indev=v4l2 --disable-outdev=v4l2 --disable-indev=oss --disable-indev=jack --disable-outdev=oss --enable-bzlib --disable-runtime-cpudetect --disable-debug --disable-gcrypt --disable-gnutls --disable-gmp --enable-gpl --enable-hardcoded-tables --enable-iconv --disable-libtls --disable-libxml2 --disable-lzma --enable-network --disable-opencl --disable-openssl --enable-postproc --disable-libsmbclient --enable-ffplay --enable-sdl2 --enable-vaapi --enable-vdpau --enable-xlib --enable-libxcb --enable-libxcb-shm --enable-libxcb-xfixes --enable-zlib --disable-libcdio --disable-libiec61883 --disable-libdc1394 --disable-libcaca --disable-openal --enable-opengl --disable-libv4l2 --enable-libpulse --disable-libdrm --disable-libjack --disable-libopencore-amrwb --disable-libopencore-amrnb --disable-libcodec2 --disable-libfdk-aac --disable-libopenjpeg --disable-libbluray --disable-libgme --disable-libgsm --disable-mmal --disable-libmodplug --enable-libopus --disable-libilbc --disable-librtmp --disable-libssh --disable-libspeex --disable-libsrt --enable-librsvg --disable-ffnvcodec --enable-libvorbis --disable-libvpx --disable-libzvbi --disable-appkit --disable-libbs2b --disable-chromaprint --disable-libflite --disable-frei0r --disable-libfribidi --disable-fontconfig --disable-ladspa --disable-libass --disable-lv2 --enable-libfreetype --disable-librubberband --disable-libzmq --disable-libzimg --disable-libsoxr --enable-pthreads --disable-libvo-amrwbenc --enable-libmp3lame --disable-libkvazaar --disable-libaom --disable-libopenh264 --disable-libsnappy --disable-libtheora --disable-libtwolame --enable-libwavpack --disable-libwebp --enable-libx264 --enable-libx265 --enable-libxvid --disable-armv5te --disable-armv6 --disable-armv6t2 --disable-neon --disable-vfp --disable-vfpv3 --disable-armv8 --disable-mipsdsp --disable-mipsdspr2 --disable-mipsfpu --disable-altivec --disable-amd3dnow --disable-amd3dnowext --disable-avx2 --cpu=host --disable-doc --disable-htmlpages --enable-manpages
@@ -252,6 +253,7 @@ libavresample   4.  0.  0 /  4.  0.  0
 libswscale      5.  3.100 /  5.  3.100
 libswresample   3.  3.100 /  3.  3.100
 libpostproc    55.  3.100 / 55.  3.100
+```
 
 vmaf-1.3.15 for the vmaf library.
 
@@ -267,79 +269,111 @@ All capturing was done via hmdi into a Black Magic Intensity Pro 4k in 4k full r
 
 Transcode to lossless just to smooth out any possible issues with indexing or the like and to strip the audio.
 
+```bash
 parallel --nice 20 --eta -S node1,node2,node3 -j1 ffmpeg -i {} -qp 0 -an {.}_ll_medium.mkv ::: /mnt/LPWorking/vmaf/ORIG/*.mkv
+```
 
 Framecopy out the 'br' versions, which are specifically to get an idea of the bitrate of the original captures for the same three minutes. These will be slightly longer than 180 seconds, but when we work out the bitrate, we take these extra seconds into consideration. This is why it's not 100% accurate.
 
+```bash
 parallel --eta -j1 ffmpeg -ss {1} -nostdin -i {2}.mkv -c copy -an -t 180 -y {2}_br.mkv ::: 237 141 90 16 5 7 210 7 14 :::+ Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue
+```
 
 Get three minute clips from the transcodes of the original captures - also set the framerate to what the content should be in, rather than the obs one. Non-fractional framerates for simplicity's sake. These were used as reference videos for vmaf.
 
+```bash
 parallel --eta -S node1,node2,node3 -j1 ffmpeg -ss {1} -nostdin -i /mnt/LPWorking/vmaf/ORIG/{2}_ll_medium.mkv -qp 0 -preset veryslow -r {3} -t 180 -y /mnt/LPWorking/vmaf/{2}_ll.mkv ::: 237 141 90 16 5 7 210 7 14 :::+ Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue :::+ 30 30 60 60 60 60 30 60 60
+```
 
 CRF versions were made like this.
 
+```bash
 parallel --eta -j1 -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/{1}_ll.mkv -preset veryslow -crf {2} /mnt/LPWorking/vmaf/{1}_264_vs_{2}.mkv ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue ::: 15 18 23 28
 parallel --eta -j1 -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/{1}_ll.mkv -preset slow -c libx265 -crf {2} /mnt/LPWorking/vmaf/{1}_265_s_{2}.mkv ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue ::: 15 18 23 28
+```
 
 Strict YouTube versions.
 
+```bash
 parallel -j1 --eta -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/{1}_ll.mkv -g {3} -bf 2 -profile:v high -movflags faststart -coder 1 -preset veryslow -b:v {2}M -y /mnt/LPWorking/vmaf/{1}_264_vs_ytrec.mp4 ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue :::+ 8 8 12 12 12 12 8 12 12 :::+ 15 15 30 30 30 30 15 30 30
 parallel -j1 --eta -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/{1}_ll.mkv -g {3} -bf 2 -profile:v high -movflags faststart -coder 1 -preset ultrafast -b:v {2}M -y /mnt/LPWorking/vmaf/{1}_264_uf_ytrec.mp4 ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue :::+ 8 8 12 12 12 12 8 12 12 :::+ 15 15 30 30 30 30 15 30 30
+```
 
 CBR versions.
 
+```bash
 parallel -j1 --eta -S node1,node2,node3 --nice 20 ffmpeg -i /mnt/LPWorking/vmaf/{1}_ll.mkv -g {3} -bf 2 -profile:v high -movflags faststart -coder 1 -preset ultrafast -x264-params "nal-hrd=cbr" -b:v {2}M -minrate {2}M -maxrate {2}M -bufsize 2M  -y /mnt/LPWorking/vmaf/{1}_264_uf_cbr.mp4 ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue :::+ 8 8 12 12 12 12 8 12 12 :::+ 15 15 30 30 30 30 15 30 30
 parallel -j1 --eta -S node1,node2,node3 --nice 20 ffmpeg -i /mnt/LPWorking/vmaf/{1}_ll.mkv -g {3} -bf 2 -profile:v high -movflags faststart -coder 1 -preset veryslow -x264-params "nal-hrd=cbr" -b:v {2}M -minrate {2}M -maxrate {2}M -bufsize 2M  -y /mnt/LPWorking/vmaf/{1}_264_vs_cbr.mp4 ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue :::+ 8 8 12 12 12 12 8 12 12 :::+ 15 15 30 30 30 30 15 30 30
+```
 
 CBR to CBR versions.
 
+```bash
 parallel -j1 --eta -S node1,node2,node3 --nice 20 ffmpeg -i /mnt/LPWorking/vmaf/{1}_264_vs_cbr.mp4 -g {3} -bf 2 -profile:v high -movflags faststart -coder 1 -preset veryslow -x264-params "nal-hrd=cbr" -b:v {2}M -minrate {2}M -maxrate {2}M -bufsize 2M -y /mnt/LPWorking/vmaf/{1}_264_vs_cbrcbr.mp4 ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue :::+ 8 8 12 12 12 12 8 12 12 :::+ 15 15 30 30 30 30 15 30 30
 parallel -j1 --eta -S node1,node2,node3 --nice 20 ffmpeg -i /mnt/LPWorking/vmaf/{1}_264_uf_cbr.mp4 -g {3} -bf 2 -profile:v high -movflags faststart -coder 1 -preset ultrafast -x264-params "nal-hrd=cbr" -b:v {2}M -minrate {2}M -maxrate {2}M -bufsize 2M -y /mnt/LPWorking/vmaf/{1}_264_uf_cbrcbr.mp4 ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue :::+ 8 8 12 12 12 12 8 12 12 :::+ 15 15 30 30 30 30 15 30 30
+```
 
 ... and finally, Double-baked CRF.
 
+```bash
 parallel --eta -j1 --nice 20 -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/{}_265_s_18.mkv -preset slow -crf 18 /mnt/LPWorking/vmaf/{}_265_s_1818.mkv ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue
+```
 
 # Appendix C Transcoded VMAF comparisons
 
 Self comparison for lossless
 
+```bash
 parallel --nice 20 --eta -j1 -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/{1}_ll.mkv -i /mnt/LPWorking/vmaf/{1}_ll.mkv -lavfi libvmaf="model_path=/usr/share/model/vmaf_v0.6.1.pkl" -f null /dev/null ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue &> /mnt/LPWorking/vmaf/vmafscores_self.txt
+```
 
 Comparisons for all the CRF files.
 
+```bash
 parallel --nice 20 --eta -j1 -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/{1}_{3}_{4}_{2}.mkv -i /mnt/LPWorking/vmaf/{1}_ll.mkv -lavfi libvmaf="model_path=/usr/share/model/vmaf_v0.6.1.pkl" -f null /dev/null ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue ::: 15 18 23 28 ::: 264 265 :::+ vs s &> /mnt/LPWorking/vmaf/vmafscores_crf.txt
+```
 
 Comparisons for all the bitrate targetted files.
 
+```bash
 parallel --nice 20 --eta -j1 -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/{1}_264_{2}_{3}.mp4 -i /mnt/LPWorking/vmaf/{1}_ll.mkv -lavfi libvmaf="model_path=/usr/share/model/vmaf_v0.6.1.pkl" -f null -t 180 /dev/null ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue ::: uf vs ::: ytrec cbr cbrcbr &> /mnt/LPWorking/vmaf/vmafscores_mp4.txt
+```
 
 Comparisons for Twice-baked CRF.
 
+```bash
 parallel --eta -j1 -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/{1}_265_s_1818.mkv -i /mnt/LPWorking/vmaf/{1}_ll.mkv -lavfi libvmaf="model_path=/usr/share/model/vmaf_v0.6.1.pkl" -f null -t 180 /dev/null ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue &> /mnt/LPWorking/vmaf/vmafscores_1818.txt
+```
 
 # Appendix D VMAF Comparisons from YouTube
 
 Lossless upload.
 
+```bash
 parallel -j1 --eta -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/yt/{}_ll.mp4 -i /mnt/LPWorking/vmaf/{}_ll.mkv -lavfi libvmaf="model_path=/usr/share/model/vmaf_v0.6.1.pkl" -f null -t 180 /dev/null ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue &> vmafscores_ll_264.txt
 parallel -j1 --eta -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/yt/{}_ll.webm -i /mnt/LPWorking/vmaf/{}_ll.mkv -lavfi libvmaf="model_path=/usr/share/model/vmaf_v0.6.1.pkl" -f null -t 180 /dev/null ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue &> vmafscores_ll_vp9.txt
+```
 
 CRF comparisons.
 
+```bash
 parallel --eta -j1 -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/yt/{1}_{3}_{4}_{2}.mp4 -i /mnt/LPWorking/vmaf/{1}_ll.mkv -lavfi libvmaf="model_path=/usr/share/model/vmaf_v0.6.1.pkl" -f null -t 180 /dev/null ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue ::: 15 18 23 28 ::: 264 265 :::+ vs s &> vmafscores_264.txt
 parallel --eta -j1 -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/yt/{1}_{3}_{4}_{2}.webm -i /mnt/LPWorking/vmaf/{1}_ll.mkv -lavfi libvmaf="model_path=/usr/share/model/vmaf_v0.6.1.pkl" -f null -t 180 /dev/null ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue ::: 15 18 23 28 ::: 264 265 :::+ vs s &> vmafscores_vp9.txt
+```
 
 Comparisons for all the bitrate targetted files.
 
+```bash
 parallel --nice 20 --eta -j1 -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/yt/{1}_264_{2}_{3}.mp4 -i /mnt/LPWorking/vmaf/{1}_ll.mkv -lavfi libvmaf="model_path=/usr/share/model/vmaf_v0.6.1.pkl" -f null -t 180 /dev/null ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue ::: uf vs ::: ytrec cbr cbrcbr &> /mnt/LPWorking/vmaf/yt/vmafscores_rec_264.txt
 parallel --nice 20 --eta -j1 -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/yt/{1}_264_{2}_{3}.webm -i /mnt/LPWorking/vmaf/{1}_ll.mkv -lavfi libvmaf="model_path=/usr/share/model/vmaf_v0.6.1.pkl" -f null -t 180 /dev/null ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue ::: uf vs ::: ytrec cbr cbrcbr &> /mnt/LPWorking/vmaf/yt/vmafscores_rec_vp9.txt
+```
 
 Comparisons for Twice-baked CRF.
 
+```bash
 parallel --nice 20 --eta -j1 -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/yt/{1}_265_s_1818.mp4 -i /mnt/LPWorking/vmaf/{1}_ll.mkv -lavfi libvmaf="model_path=/usr/share/model/vmaf_v0.6.1.pkl" -f null -t 180 /dev/null ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue &> /mnt/LPWorking/vmaf/yt/vmafscores_1818_264.txt
 parallel --nice 20 --eta -j1 -S node1,node2,node3 ffmpeg -i /mnt/LPWorking/vmaf/yt/{1}_265_s_1818.webm -i /mnt/LPWorking/vmaf/{1}_ll.mkv -lavfi libvmaf="model_path=/usr/share/model/vmaf_v0.6.1.pkl" -f null -t 180 /dev/null ::: Death Detroit Diablo Flower Forza Goose Persona RE7 Rogue &> /mnt/LPWorking/vmaf/yt/vmafscores_1818_vp9.txt
+```
 
 # Appendix X Results Tables
 
