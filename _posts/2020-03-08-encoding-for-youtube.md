@@ -265,7 +265,7 @@ youtube-dl-2020.01.24 for downloading the videos from YouTube for comparison.
 
 # Appendix B Creating Transcodes
 
-All capturing was done via hmdi into a Black Magic Intensity Pro 4k in 4k full rgb @60000/1001. OBS was used to record the stream in yuv420p limited colour.
+All capturing was done via hmdi into a Black Magic Intensity Pro 4k in 1080p full rgb @60000/1001. OBS was used to record the stream in yuv420p limited colour.
 
 Transcode to lossless just to smooth out any possible issues with indexing or the like and to strip the audio.
 
