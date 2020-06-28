@@ -234,7 +234,7 @@ Next article, how 4k affects YouTube encoding.
 
 Turns out the encoding done by YouTube when you upload 4k is so much better that even uploading upscaled 1080p content will result in significantly better YouTube vmaf scores for the same resolution. Here we show the realistic scenario. h264 version of the YouTube video shown by default for me versus the 2160p vp9 versions which are the default when uploading the upscaled to 2160p video and viewing in various resolution settings. Not shown, but comparing 1080 vp9 to 1080 vp9 versions on YouTube still shows a significant quality increase and 2160p viewed in its native resolution gives comparable results to 2160p viewed as 1080p.
 
-So in actually, all future videos will be quick rendered in 2160p with a lanzos upscale and then in 1080p crf 18 slow for archival. Because YouTube's encoder is better when handling 2160p content.
+So in actuality, all future videos will be quick rendered in 2160p with a lanzos upscale and then in 1080p crf 18 slow for archival. Because YouTube's encoder is better when handling 2160p content.
 
 # Appendix A Tools
 
