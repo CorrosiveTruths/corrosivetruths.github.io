@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 'Penumbra: Overture'
+title: 'Penumbra: Overture review'
 date: 2009-12-27 15:54:17 +0000
 author: Peter
 published: true
@@ -16,6 +16,8 @@ tags:
 - penumbra
 - overture
 ---
+![S.T.A.L.K.E.R.: Shadow of Chernobyl]({{site.url}}/assets/images/penumbra_header.jpg)
+
 One of my favourite games is Call of Cthulhu: Dark Corners of the Earth, I have a soft spot for games that are actually scary, that make you cringe in fear, make you dread what happens next, yet drive you forward by using attraction combined with revulsion. It isn't easy to do, few games, or films for that matter have managed it. Arguably, games being interactive, they have the advantage, Silent Hills 1, 2, and 4 being good examples that aren't Dark Corners of the Earth. Oh and System Shock 2.
 
 Wait, that's all the games that have managed it.
