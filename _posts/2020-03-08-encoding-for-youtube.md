@@ -29,7 +29,7 @@ The purpose of these tests and this document is somewhat to justify my own setti
 
 # Capture
 
-Nine games were chosen for capture that I felt represented a variety of encoding challenges, from slow-paced 30fps games with flat block-colour menus to a 60fps colourful racing game as well as some games I thought would be a challenge for both the encoders and the quality assessment. Games were chosen because they represent things YouTube gamers would actually be uploading rather than using open source movies.
+Nine games were chosen, from slow-paced 30fps games with flat block-colour menus to a 60fps colourful racing game as well as some games I thought would be a challenge for both the encoders and the quality assessment. Games were chosen because they represent things YouTube gamers would actually be uploading rather than using open source movies.
 
 We all love [Big Buck Bunny](https://peach.blender.org/) and his wacky adventures, but it's almost, but not quite, entirely unlike game footage.
 
@@ -72,7 +72,7 @@ Rates here are calculated from mkv file containing only the video steam, as embe
 
 Two interesting facts to note.
 
-The capture and transcoded files have the same video frames in them, but very different bitrates. NVEnc was running in real-time and so needed to use more bits to store the information. Transcodes were not done in real-time at the 'veryslow' preset (the slowest reasonable preset, the only slower one is called placebo for good reason). All this work was done on a variety of commodity equipment in parallel, so no transcode times are available.
+The capture and transcoded files have the same video frames in them, but very different bitrates. NVEnc was running in real-time and so needed to use more bits to store the information. Transcodes were not done in real-time, but at the 'veryslow' preset (the slowest reasonable preset, the only slower one is called placebo for good reason). All this work was done on a variety of commodity equipment in parallel, so no transcode times are available.
 
 The variation between games is *enormous*. If you compare the smallest and largest transcoded bitrates, Forza is **more than 10 times** bigger than Rogue. Rogue Legacy is a four-way scrolling sprite-based game and was specifically chosen as easy to encode (along with Persona).
 
@@ -96,14 +96,14 @@ By uploading our lossless videos to YouTube, downloading the transcoded versions
 
 Name|YT.264 VMAF|YT.264 Rate (kb/s)|YT.vp9 VMAF|YT.vp9 Rate (kb/s)
 ---|---|---|---|---
-Forza_ll|54.373016|5654|56.147891|3285
 Death_ll|57.606028|4257|65.894301|1961
-Flower_ll|61.560809|5142|67.273151|2939
-Diablo_ll|64.417506|5496|70.17594|3207
-RE7_ll|69.8519|4034|77.311906|2287
 Detroit_ll|68.334414|3536|79.690493|1716
+Diablo_ll|64.417506|5496|70.17594|3207
+Flower_ll|61.560809|5142|67.273151|2939
+Forza_ll|54.373016|5654|56.147891|3285
 Goose_ll|76.11744|2625|85.667461|1325
 Persona_ll|85.245592|2607|89.414688|1473
+RE7_ll|69.8519|4034|77.311906|2287
 Rogue_ll|96.449077|3751|93.799547|2202
 
 ![Lossless uploaded to YouTube]({{site.url}}/assets/images/Lossless_uploads_to_youtube.svg "Lossless uploaded to YouTube")  
@@ -227,12 +227,12 @@ I'm also quite happy that crf 18 can survive a further transcode of itself with 
 
 # What about 4k?
 
-Next article, how 4k affects YouTube encoding.
+[Next article]({% post_url 2020-09-22-VMAF-comparisons-for-2160-upscaled-Content-on-YouTube %}), VMAF comparisons for 2160 upscaled Content on YouTube.
 
 ![Uploading 2160p]({{site.url}}/assets/images/4k_preview.svg "Uploading 2160p")  
 *Uploading 2160p*
 
-Turns out the encoding done by YouTube when you upload 4k is so much better that even uploading upscaled 1080p content will result in significantly better YouTube vmaf scores for the same resolution. Here we show the realistic scenario. h264 version of the YouTube video shown by default for me versus the 2160p vp9 versions which are the default when uploading the upscaled to 2160p video and viewing in various resolution settings. Not shown, but comparing 1080 vp9 to 1080 vp9 versions on YouTube still shows a significant quality increase and 2160p viewed in its native resolution gives comparable results to 2160p viewed as 1080p.
+Turns out the encoding done by YouTube when you upload 4k is so much better that even uploading upscaled 1080p content will result in significantly better YouTube vmaf scores for the same resolution. Here we show the realistic scenario. h264 version of the YouTube video shown by default for me versus the 2160p vp9 versions which are the default when uploading the upscaled to 2160p video and viewing in various resolution settings. Not shown, but comparing 1080 vp9 to 1080 vp9 versions on YouTube still shows a significant yet humble quality increase and 2160p viewed in its native resolution gives comparable results to 2160p viewed as 1080p.
 
 So in actuality, all future videos will be quick rendered in 2160p with a lanzos upscale and then in 1080p crf 18 slow for archival. Because YouTube's encoder is better when handling 2160p content.
 
@@ -543,12 +543,10 @@ Rogue_ll|98.665875|33123|96.449077|3751|93.799547|2202|745274044|84406256|495394
 
 # Appendix Z Notes
 
-How everything was done.
-
 I suspect if I tried big bunny, a lot more of these results would have been expected, because that's the sort of content these things are tested with, whereas, Detroit, Flower, and Untitled Goose Game are not like most animations or films that netflix or x264 testing will have come across. These more unusual visual experiences are part of the draw of modern games.
 
-There is a channel dedicated to this article where you can find all the uploads featured within. https://www.youtube.com/channel/UCwXGFTOhuMJ1jQzOXRx3Fbg
+There is a channel dedicated to this article where you can find all the uploads featured within. <https://www.youtube.com/channel/UCwXGFTOhuMJ1jQzOXRx3Fbg>
 
 Original videos are too large to share.
 
-Our actual gaming channel is https://www.youtube.com/c/AndSoBegins
+Our actual gaming channel is <https://www.youtube.com/c/AndSoBegins>
