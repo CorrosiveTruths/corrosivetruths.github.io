@@ -28,7 +28,7 @@ tags:
 
 # Introduction
 
-The purpose of these tests was to disprove the notion that uploading higher than 1080 content would give better quality results for the 1080 version of an upload than just uploading at 1080 by showing the vp9 version where supported instead of the h264 version. Turned out it does actually work. The turning point for me was the observation that some channel's videos show you the vp9 version and some the h264, yet Youtube always encodes to both h264 and vp9 codecs. Since I did a bunch of vmaf comparisons of video for the previous article, [Encoding for Youtube]({% post_url 2020-03-08-encoding-for-youtube %}) - I thought I would do something similar for 2160 upscales of the same source material.
+The purpose of these tests was to disprove the notion that uploading higher than 1080 content would give better quality results for the 1080 version of an upload than just uploading at 1080 by showing the vp9 version where supported instead of the h264 version. Turned out it does actually work. The turning point for me was the observation that some channel's videos show you the vp9 version and some the h264, yet Youtube always encodes to both. Since I did a bunch of vmaf comparisons of video for the previous article, [Encoding for Youtube]({% post_url 2020-03-08-encoding-for-youtube %}) - I thought I would do something similar for 2160 upscales of the same source material.
 
 # Capture
 
