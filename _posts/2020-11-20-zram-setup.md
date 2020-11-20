@@ -25,13 +25,13 @@ Personally, I only use a single zram for swap as that will improve the system as
 
 You need the module loading at start-up and a service file (you can of course adapt this for other init systems).
 
-`/etc/modules-load.d/zram.conf`
 ```bash
+#/etc/modules-load.d/zram.conf
 zram
 ```
 
-`/etc/systemd/system/zram-setup.service`
 ```bash
+#/etc/systemd/system/zram-setup.service
 [Unit]
 Description=Setup zram
 
