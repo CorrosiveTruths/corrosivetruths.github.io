@@ -9,7 +9,7 @@ categories:
 ---
 People have a habit of over-specifying parameters, zram is particularly bad for it, but really, you don't need to tell it a lot and it will take care of it for you.
 
-The other misunderstanding with zram is that when you set the size you are setting how big the swap partition itself is, rather than how much memory it is allowed to use. You can't really set how much memory to devote to zram up as that depends on the compression ratio.
+The other misunderstanding with zram is that when you set the size you are setting how big the swap partition itself is, rather than how much memory it is allowed to use. You can't really set how much memory to devote to zram as that depends on the compression ratio.
 
 For example, setting up zram like tmpfs with half the size of your memory, will in tmpfs' case mean that it will use up to half your memory. With zram it means you're limiting the swap used to half your memory, if you get a compression ratio of 3:1 then you'll be using 1/6 of your memory for swapping. Which likely isn't what you want. Instead, you should set your zram up so it can compress much more of your memory than that.
 
@@ -31,7 +31,7 @@ zram
 ```
 
 ```bash
-#/etc/systemd/system/zram-setup.service
+# /etc/systemd/system/zram-setup.service
 [Unit]
 Description=Setup zram
 
@@ -45,5 +45,4 @@ ExecStart=/sbin/swapon -L Swap -p 100
 ExecStop=/sbin/swapoff /dev/zram0
 
 [Install]
-WantedBy=swap.target
-```
+WantedBy=multi-user.target```
