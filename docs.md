@@ -39,6 +39,11 @@ ffmpeg -r 60000/1001 -i input.mkv
 {% endhighlight %}
 -->
 
+# OBS
+
+
+
+
 # Multiplayer Game Editing
 
 Lessons learned from Sea of Thieves
@@ -59,20 +64,20 @@ Extension: mkv
 Parameters: vcodec=libx265 crf=20.5 acodec=flac preset=slow rescale=lanczos
 {% endhighlight %}
 
-Lossless encoding is great for in-project usage to make layers easier to manipulate.
+Lossless encoding is great for in-project usage to make layers easier to manipulate. Technically not lossless due to chroma subsampling, but good enough for most purposes.
 
-{% highlight shell %}
+```bash
 Profile Name: Lossless h264
 Extension: mkv
 Parameters: vcodec=libx264 qp=0 acodec=pcm_s24le preset=faster rescale=lanczos
-{% endhighlight %}
+```
 
-You can make a transparent video with kdenlive by using a profile that supports it along with a base layer which is a transparent image.
+You can make a transparent video with kdenlive by using a profile that supports it along with a base layer which is a transparent image and setting the internal format to rgb24a (otherwise the internal format is yuv422)
 
 {% highlight shell %}
 Profile name: Transparent
 Extension: mkv
-Parameters: pix_fmt=bgra acodec=pcm_s24le vcodec=ffv1 rescale=lanczos
+Parameters: pix_fmt=yuva420p acodec=pcm_s24le vcodec=ffv1 rescale=lanczos mlt_image_format=rgb24a
 {% endhighlight %}
 
 Audio-only encoding is another part of the process which means no quality is lost when exporting, like edited sound to be mixed together outside of kdenlive. kdenlive and flac have issues, which is why we avoid it in footage that will be used in kdenlive. For final export it's fine, and then we re-mux it into the final video as an opus file (256k). flac will also be missing length information for some reason (it's there if you put it in a .mka file, but not a .flac file). The same problems are unluckily also there with .alac files.

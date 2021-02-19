@@ -45,4 +45,5 @@ ExecStart=/sbin/swapon -L Swap -p 100
 ExecStop=/sbin/swapoff /dev/zram0
 
 [Install]
-WantedBy=multi-user.target```
+WantedBy=multi-user.target
+```
