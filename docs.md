@@ -51,7 +51,9 @@ Videos should be transferred from the local storage to Network (/mnt/LPWorking).
 
 We use ai-based noise suppression (https://github.com/GregorR/rnnoise-models) to get a clean vocal track.
 
-ffmpeg -i Source.mkv -y -map 0:2 -af arnndn=beguiling-drafter-2018-08-30/bd.rnnn,agate=threshold=0.003:ratio=10 Source.flac
+ffmpeg -i Source.mkv -y -map 0:2 -af arnndn=beguiling-drafter-2018-08-30/bd.rnnn,agate=threshold=0.003:ratio=10 -c pcm_f32le Source.mka
+
+Uncompressed because there are issues with clicks and pops in certain circumstances with compressed lossless formats.
 
 # Multiplayer Game Editing
 
