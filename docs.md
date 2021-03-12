@@ -41,8 +41,17 @@ ffmpeg -r 60000/1001 -i input.mkv
 
 # OBS
 
+Output mode is advanced, we record in mkv with 3 audio tracks. We will use either Quicksync or nvidia. Nvidia has the advantage of yuv444 encoding which has benefits when upscaling to 4k (that I need to prove works at some point) For Quicksync we use ICQ set to 1 for nigh-lossless, but smaller. Audio bit-rates for active channels are set to 320 and named GME, VOX, and MIX. Generally we stick to 30 or 60 fps.
 
+Make sure Advanced has colour space set to 709.
 
+# Preprocess
+
+Videos should be transferred from the local storage to Network (/mnt/LPWorking).
+
+We use ai-based noise suppression (https://github.com/GregorR/rnnoise-models) to get a clean vocal track.
+
+ffmpeg -i Source.mkv -y -map 0:2 -af arnndn=beguiling-drafter-2018-08-30/bd.rnnn,agate=threshold=0.003:ratio=10 Source.flac
 
 # Multiplayer Game Editing
 
@@ -119,5 +128,5 @@ Note that the idea isn't to get an exact overall i of -23 as that's actually fai
 11. Now do something similar for the game audio (alternative you can mix with sox -m -v1 input -v1 input output) volumes. ffmpeg -i gme.flac -af ebur128 -f null /dev/null
 12. Work out the difference between I and -23 (i - 23)
 13. Amplify game to -23 so the vox is clear over the game when it is autoducked, but fairly loud when there is no talking. If the game is very quiet, and you can't amplify up, use the limiter to get to -23. This will need to done separately on video tracks from sources outside the game. Very rarely, you might need to adjust the video sound *before* you normalise the volumes, because one bit is an anomaly, or because intro videos are too loud. Turning up or down individual sections or even soft limiting the entire video.
-14. Autoduck the game sound, with the voice underneath, at -12 duck, with 1s pause, and outer fades of 0.5. Threshold should be -30db
+14. Autoduck the game sound, with the voice underneath, at -12 duck, with 1s pause, and outer fades of 0.5. Threshold should be -15db
 15. Export the audio as selections to flac so you end up with the first two tracks as a mix, and the un-ducked game audio as a separate file.
