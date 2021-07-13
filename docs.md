@@ -41,7 +41,7 @@ ffmpeg -r 60000/1001 -i input.mkv
 
 # OBS
 
-Output mode is advanced, we record in mkv with 3 audio tracks. We will use either Quicksync or nvidia. Nvidia has the advantage of yuv444 encoding which has benefits when upscaling to 4k (that I need to prove works at some point) For Quicksync we use ICQ set to 1 for nigh-lossless, but smaller. Audio bit-rates for active channels are set to 320 and named GME, VOX, and MIX. Generally we stick to 30 or 60 fps.
+Output mode is advanced, we record in mkv with 3 audio tracks. We use Quicksync with ICQ set to 1 for nigh-lossless, but smaller. Audio bit-rates for active channels are set to 320 and named GME, VOX, and MIX. Generally we stick to 30 or 60 fps.
 
 Make sure Advanced has colour space set to 709.
 
@@ -51,7 +51,9 @@ Videos should be transferred from the local storage to Network (/mnt/LPWorking).
 
 We use ai-based noise suppression (https://github.com/GregorR/rnnoise-models) to get a clean vocal track.
 
+{% highlight shell %}
 ffmpeg -i Source.mkv -y -map 0:2 -af arnndn=beguiling-drafter-2018-08-30/bd.rnnn,agate=threshold=0.003:ratio=10 -c pcm_f32le Source.mka
+{% endhighlight %}
 
 Uncompressed because there are issues with clicks and pops in certain circumstances with compressed lossless formats.
 
@@ -77,11 +79,11 @@ Parameters: vcodec=libx265 crf=20.5 acodec=flac preset=slow rescale=lanczos
 
 Lossless encoding is great for in-project usage to make layers easier to manipulate. Technically not lossless due to chroma subsampling, but good enough for most purposes.
 
-```bash
+{% highlight shell %}
 Profile Name: Lossless h264
 Extension: mkv
 Parameters: vcodec=libx264 qp=0 acodec=pcm_s24le preset=faster rescale=lanczos
-```
+{% endhighlight %}
 
 You can make a transparent video with kdenlive by using a profile that supports it along with a base layer which is a transparent image and setting the internal format to rgb24a (otherwise the internal format is yuv422)
 
@@ -96,7 +98,7 @@ Audio-only encoding is another part of the process which means no quality is los
 {% highlight shell %}
 Profile name: FLAC
 Extension: flac
-Parameters: video_off=1 vn=1 sample_fmt=s32
+Parameters: video_off=1 vn=1 sample_fmt=f32
 {% endhighlight %}
 
 # Kdenlive notes
@@ -132,3 +134,19 @@ Note that the idea isn't to get an exact overall i of -23 as that's actually fai
 13. Amplify game to -23 so the vox is clear over the game when it is autoducked, but fairly loud when there is no talking. If the game is very quiet, and you can't amplify up, use the limiter to get to -23. This will need to done separately on video tracks from sources outside the game. Very rarely, you might need to adjust the video sound *before* you normalise the volumes, because one bit is an anomaly, or because intro videos are too loud. Turning up or down individual sections or even soft limiting the entire video.
 14. Autoduck the game sound, with the voice underneath, at -12 duck, with 1s pause, and outer fades of 0.5. Threshold should be -15db
 15. Export the audio as selections to flac so you end up with the first two tracks as a mix, and the un-ducked game audio as a separate file.
+
+# Video Rendering
+
+We render in guides mode to get each episode out of the same project.
+
+Another set of scripts that produce 4k versions with lanczos scaling are created with fast as the preset for samish rendering speeds. At the end we have _2160 versions and _1080 versions.
+
+# Muxing
+
+Due to various audio issues and the added flexibility of rendering video and audio separately (we can start rendering video before we master the audio)
+
+We mux thus, note the framerate in the sed bit and the episode numbers after the first triple colon (:::).
+
+```bash
+parallel --ungroup -j1 ffmpeg -hide_banner -i {1.}_2160.mkv -ss {2} -i /home/user/kdenlive/Game_mix.flac -ss {2} -i /home/user/kdenlive/Game_gme.flac -c:v copy -map 0:v -map 1 -map 2 -c:a libopus -ab 256k -shortest -y {1} ::: /mnt/LPWorking/Fin/Game{1..9}.mkv :::+ `cat /home/user/kdenlive/scripts/Game_00?.sh | grep -oP 'in=\d+' | grep -oP '\d+' | sed 's:$:/60:g' | bc -l | tr '\n' ' '`
+```
