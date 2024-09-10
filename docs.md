@@ -124,7 +124,7 @@ Note that the idea isn't to get an exact overall i of -23 as that's actually fai
 3. Import each track into audacity for final audio mix.
 4. Make the vox mono (tracks, mix, Mix Stereo down to mono)
 5. Compress the vox (threshold -30, noisefloor -70, ratio 3:1, attack time 0.10, release time 1.0, make-up gain unticked, compress based on peaks untick)
-6. Export just the vox track from audacity as 24bit flac
+6. Export just the vox track from audacity as flac
 7. ffmpeg -i voxnorm.flac -af ebur128=dualmono=1 -f null /dev/null
 8. Work out the difference between I and -27 (i - 27)
 9. Amplify vox by this.
